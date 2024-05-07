@@ -3,12 +3,14 @@ package com.aditya.shop.service.impl;
 import com.aditya.shop.entity.Customer;
 import com.aditya.shop.repository.CustomerRepository;
 import com.aditya.shop.service.CustomerService;
+import com.aditya.shop.specification.CustomerSpecification;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -34,10 +36,9 @@ public class CustomerServiceImpl implements CustomerService {
 
 
 
-    @Override
-    public List<Customer> getAll() {
+    public List<Customer> getAllAwal() {
         String name = "aditya";
-        String mobilePhone = "08123456789";
+        String phone = "08123456789";
 
 //        ambil kriteria builder
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -57,8 +58,8 @@ public class CustomerServiceImpl implements CustomerService {
             predicates.add(namePredicate);
         }
 
-        if (mobilePhone != null) {
-            Predicate mobilePhoneNoPredicate = criteriaBuilder.equal(root.get("mobilePhoneNo"), mobilePhone);
+        if (phone != null) {
+            Predicate mobilePhoneNoPredicate = criteriaBuilder.equal(root.get("mobilePhoneNo"), phone);
             predicates.add(mobilePhoneNoPredicate);
         }
 
@@ -69,6 +70,14 @@ public class CustomerServiceImpl implements CustomerService {
 
         return entityManager.createQuery(query).getResultList();
     }
+
+
+    @Override
+    public List<Customer> getAll(){
+        Specification<Customer> specification = CustomerSpecification.getSpecification();
+        return customerRepository.findAll(specification);
+    }
+
 
     @Override
     public Customer update(Customer customer) {
