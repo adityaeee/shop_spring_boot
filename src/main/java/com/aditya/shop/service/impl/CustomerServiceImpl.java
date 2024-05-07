@@ -3,9 +3,15 @@ package com.aditya.shop.service.impl;
 import com.aditya.shop.entity.Customer;
 import com.aditya.shop.repository.CustomerRepository;
 import com.aditya.shop.service.CustomerService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +20,7 @@ import java.util.Optional;
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final EntityManager entityManager;
 
     @Override
     public Customer create(Customer customer) {
@@ -29,7 +36,38 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<Customer> getAll() {
-        return customerRepository.findAll();
+        String name = "aditya";
+        String mobilePhone = "08123456789";
+
+//        ambil kriteria builder
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+
+//        ini baru melakkan query "Select" doang
+        CriteriaQuery<Customer> query = criteriaBuilder.createQuery(Customer.class);
+
+//        "FROM m_customer"
+        Root<Customer> root = query.from(Customer.class);
+
+//        "SELECT * FROM m_customer"
+        query.select(root);
+
+        List<Predicate> predicates = new ArrayList<>();
+        if (name != null) {
+            Predicate namePredicate = criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + name.toLowerCase() + "%");
+            predicates.add(namePredicate);
+        }
+
+        if (mobilePhone != null) {
+            Predicate mobilePhoneNoPredicate = criteriaBuilder.equal(root.get("mobilePhoneNo"), mobilePhone);
+            predicates.add(mobilePhoneNoPredicate);
+        }
+
+        query.where(criteriaBuilder.or(predicates.toArray(new Predicate[]{})));
+
+//        sama halnya dengan ini
+//        entityManager.createQuery("SELECT c FROM m_customer c");
+
+        return entityManager.createQuery(query).getResultList();
     }
 
     @Override
