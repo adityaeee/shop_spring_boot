@@ -2,9 +2,7 @@ package com.aditya.shop.controller;
 
 import com.aditya.shop.entity.Product;
 import com.aditya.shop.service.ProductService;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.util.GenericSignature;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

@@ -48,40 +48,17 @@ public class ProductServiceImpl implements ProductService {
         List<Product> result = new ArrayList<>();
 
         if (name != null){
-            result = productRepository.findAllByNameLike("%" + name + "%");
+            return productRepository.findAllByNameLike("%" + name + "%");
+        }else if (minPrice != null) {
+           return productRepository.findAllByPriceGreaterThanEqual(minPrice);
+        }else if (maxPrice != null) {
+            return productRepository.findAllByPriceLessThanEqual(maxPrice);
+        }else if (stock != null) {
+            return productRepository.findAllByStockGreaterThanEqual(stock);
         }else {
-            result = productRepository.findAll();
+       return productRepository.findAll();
         }
 
-        if (minPrice != null) {
-            products = productRepository.findAllByPriceGreaterThanEqual(minPrice);
-//            System.out.println(products);
-//            for(Product product : products) {
-//                for (Product res : result) {
-//                    if(!res.equals(product)) {
-//                        result.remove(res);
-//                    }
-//                }
-//            }
-            for(Product product : result) {
-             if (!products.contains(product)){
-                 result.remove(product);
-             }
-            }
-        }
-
-//        if (maxPrice != null) {
-//            result =  productRepository.findAllByPriceLessThanEqual(maxPrice);
-//            result.forEach(product -> products.add(product));
-//        }
-//
-//        if (stock != null) {
-//            result.clear();
-//            result =  productRepository.findAllByStockGreaterThanEqual(stock);
-//            result.forEach(product -> products.add(product));
-//        }
-
-       return result;
     }
 
 
