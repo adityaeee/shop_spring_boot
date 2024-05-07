@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Entity
-@Table(name = "products")
+@Table(name = "m_product")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -18,7 +18,7 @@ public class Product {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "price", nullable = false, columnDefinition = "BIGINT CHECK(price>=0")
+    @Column(name = "price", nullable = false)
     private Long price;
 
     @Column(name = "stock", nullable = false)

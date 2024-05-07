@@ -4,6 +4,6 @@ import com.aditya.shop.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
+@Repository // ini optional, tapi kita kasih aja biar konsistentory
 public interface CustomerRepository extends JpaRepository<Customer, String> {
 }

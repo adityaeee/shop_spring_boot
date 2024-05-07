@@ -17,35 +17,38 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer create(Customer customer) {
-        customerRepository.saveAndFlush(customer);
-        return customer;
+        return customerRepository.saveAndFlush(customer);
     }
 
     @Override
     public Customer getById(String id) {
-        Optional<Customer> customer = customerRepository.findById(id);
-
-        if (customer.isEmpty()) {
-            throw new RuntimeException("Data tidak ditemukan");
-        }else {
-            return customer.get();
-        }
+        return findByIdOrThrowNotFound(id);
     }
+
+
 
     @Override
     public List<Customer> getAll() {
-       return customerRepository.findAll();
+        return customerRepository.findAll();
     }
 
     @Override
     public Customer update(Customer customer) {
-        getById(customer.getId());
+        findByIdOrThrowNotFound(customer.getId());
         return customerRepository.saveAndFlush(customer);
     }
 
     @Override
     public void delete(String id) {
-        Customer customer = getById(id);
+        Customer customer = findByIdOrThrowNotFound(id);
         customerRepository.delete(customer);
     }
+
+    public Customer findByIdOrThrowNotFound(String id) {
+        // artinya, kita findById, kalau enggak ada dilempar atau di Throw,
+        // jadi kan sebenernya di bungkus sama optional dan kita pakai.get maka datanya menjadi Customer kayak kemaren. tapi dengan .orElseThrow kita juga gunakan .get ketika ada datanya dan otomatis di lempat throw ketika data null
+        return customerRepository.findById(id).orElseThrow(() -> new RuntimeException("customer not found"));
+    }
+
+
 }
