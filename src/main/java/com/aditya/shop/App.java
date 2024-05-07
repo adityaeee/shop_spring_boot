@@ -1,13 +1,11 @@
 package com.aditya.shop;
 
-import com.aditya.shop.Entity.Product;
+import com.aditya.shop.entity.Product;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.print.attribute.standard.Media;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +62,7 @@ public class App {
 
 
     @PostMapping(
-            path = "/api/v1/products",
+            path = "/api/v0/products",
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
