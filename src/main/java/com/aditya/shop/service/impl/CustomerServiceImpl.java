@@ -1,5 +1,6 @@
 package com.aditya.shop.service.impl;
 
+import com.aditya.shop.dto.request.SearchCustomerRequest;
 import com.aditya.shop.entity.Customer;
 import com.aditya.shop.repository.CustomerRepository;
 import com.aditya.shop.service.CustomerService;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -73,8 +73,13 @@ public class CustomerServiceImpl implements CustomerService {
 
 
     @Override
-    public List<Customer> getAll(){
-        Specification<Customer> specification = CustomerSpecification.getSpecification();
+    public List<Customer> getAll(SearchCustomerRequest request){
+        Specification<Customer> specification = CustomerSpecification.getSpecification(request);
+
+        if(request.getName() ==null && request.getPhone()==null && request.getBirthDate()==null && request.getStatus() == null) {
+            return customerRepository.findAll();
+        }
+
         return customerRepository.findAll(specification);
     }
 
@@ -97,5 +102,10 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.findById(id).orElseThrow(() -> new RuntimeException("customer not found"));
     }
 
+    @Override
+    public void updateStatusById(String id, Boolean status) {
+        findByIdOrThrowNotFound(id);
+        customerRepository.updateStatus(id, status);
+    }
 
 }
