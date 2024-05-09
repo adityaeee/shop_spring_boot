@@ -84,4 +84,32 @@ public class TransactionServiceImpl implements TransactionService {
                 .transactionDetails(trxDetailResponse)
                 .build();
     }
+
+    @Override
+    public List<TransactionResponse> getAll() {
+
+        List<Transaction> transactions = transactionRepository.findAll();
+
+        return transactions.stream()
+                .map(transaction -> {
+                    List<TransactionDetailResponse> transDetailResponse = transaction.getTransactionDetails().stream()
+                            .map(detail -> {
+                                return TransactionDetailResponse.builder()
+                                        .id(detail.getId())
+                                        .productId(detail.getProduct().getId())
+                                        .productPrice(detail.getProductPrice())
+                                        .quantity(detail.getQty())
+                                        .build();
+                            }).toList();
+
+
+                  return TransactionResponse.builder()
+                          .id(transaction.getId())
+                          .customerId(transaction.getCustomer().getId())
+                          .transDate(transaction.getTransDate())
+                          .transactionDetails(transDetailResponse)
+                          .build();
+
+                }).toList();
+    }
 }

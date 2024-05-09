@@ -6,10 +6,9 @@ import com.aditya.shop.dto.response.TransactionResponse;
 import com.aditya.shop.entity.Transaction;
 import com.aditya.shop.service.TransactionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,5 +23,10 @@ public class TransactionController {
     ) {
        return transactionService.create(request);
     }
+
+    @GetMapping
+    public List<TransactionResponse> getAllTransaction(){
+        return transactionService.getAll();
+    };
 
 }
