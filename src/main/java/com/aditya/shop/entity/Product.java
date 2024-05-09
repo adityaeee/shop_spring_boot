@@ -1,5 +1,6 @@
 package com.aditya.shop.entity;
 
+import com.aditya.shop.constant.ConstantTable;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Entity
-@Table(name = "m_product")
+@Table(name = ConstantTable.PRODUCT)
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

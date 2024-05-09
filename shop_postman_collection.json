@@ -1,0 +1,420 @@
+{
+	"info": {
+		"_postman_id": "65f4347b-abea-40c7-97d8-0783d04de5c8",
+		"name": "Aditya_shop",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20141020"
+	},
+	"item": [
+		{
+			"name": "Product",
+			"item": [
+				{
+					"name": "Create New Product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// {\n//   \"name\": \"Kentang keju\",\n//   \"price\": 4000,\n//   \"stock\": 10\n// }\n\n// {\n//   \"name\": \"Kentang Coklat\",\n//   \"price\": 6000,\n//   \"stock\": 10\n// }\n\n\n// {\n//   \"name\": \"Hamburger\",\n//   \"price\": 7000,\n//   \"stock\": 10\n// }\n\n// {\n//   \"name\": \"Bolu Pandan\",\n//   \"price\": 8000,\n//   \"stock\": 10\n// }\n\n// {\n//   \"name\": \"Bolu Coklat\",\n//   \"price\": 9000,\n//   \"stock\": 10\n// }\n\n// {\n//   \"name\": \"Pisang Bakar\",\n//   \"price\": 11000,\n//   \"stock\": 10\n// }\n\n// {\n//   \"name\": \"Coklat Durian\",\n//   \"price\": 10000,\n//   \"stock\": 10\n// }\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/products",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Product",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"ddb06e8f-5ec0-4209-8672-f1b3e9cdef\",\n    \"name\": \"Pisang Goreng Madu\",\n    \"price\": 5000,\n    \"stock\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/products",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Product",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/products",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Product By name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/products?name=Pisang&minPrice=4000",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"products"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Pisang"
+								},
+								{
+									"key": "minPrice",
+									"value": "4000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/products/bb102a0e-7c15-4e41-b1a7-95d136bf66e7",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"bb102a0e-7c15-4e41-b1a7-95d136bf66e7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Dell Product By Id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/products/bb102a0e-7c15-4e41-b1a7-95d136bf66e7",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"bb102a0e-7c15-4e41-b1a7-95d136bf66e7"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Customer",
+			"item": [
+				{
+					"name": "Create New Customer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// {\n//     \"name\": \"Safaraz Akma\",\n//     \"mobilePhoneNo\": \"08123456789\",\n//     \"address\": \"Jl. B. Aceh\",\n//     \"birthDate\": \"2004-03-16\",\n//     \"status\": false\n// }\n\n// {\n//   \"name\": \"Ruby\",\n//   \"mobilePhoneNo\": \"08123456789\",\n//   \"address\": \"Jl. B. Aceh\",\n//   \"birthDate\": \"2004-03-18\",\n//   \"status\": false\n// }   \n\n{\n  \"name\": \"Aurelia\",\n  \"mobilePhoneNo\": \"08123456789\",\n  \"address\": \"Jl. B. Aceh\",\n  \"birthDate\": \"2004-03-17\",\n  \"status\": false\n}   ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/customers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"customers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Customer Customer",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"ddb06e8f-5ec0-4209-8672-f1b3e9cdef\",\n    \"name\": \"Pisang Goreng Madu\",\n    \"price\": 5000,\n    \"stock\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/customers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"customers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Customer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/customers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"customers"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "SAFA",
+									"disabled": true
+								},
+								{
+									"key": "birthDate",
+									"value": "2004-03-17",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Customer By Name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/customers?name=Pisang",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"customers"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Pisang"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Customer By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/customers/ddb06e8f-5ec0-4209-8672-f1b3e9cdef64",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"customers",
+								"ddb06e8f-5ec0-4209-8672-f1b3e9cdef64"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Dell Customer By Id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/customers/b513927a-1dfb-40aa-95fe-f771248744f4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"customers",
+								"b513927a-1dfb-40aa-95fe-f771248744f4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Status By Id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/customers/41b7757a-b173-4296-ae5b-3df1f01d5061?status=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"customers",
+								"41b7757a-b173-4296-ae5b-3df1f01d5061"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transaction",
+			"item": [
+				{
+					"name": "Create New Transaction",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "//  {\n//         \"customerId\" : \"91c0c2e3-624e-4342-8370-de0c857e8362\",\n//         \"transactionDetails\" :\n//         [\n//             {\n//                 \"productId\" : \"dc8d07a2-0779-49f2-acbe-2dd5f40e9303\",\n//                 \"qty\" : 1\n//             },\n//             {\n//                 \"productId\" : \"4e23f273-65c5-4f65-a4d1-57b99f7b43f1\",\n//                 \"qty\" : 1\n//             },\n//             {\n//                 \"productId\" : \"4e222928-8898-4ad1-8aa3-cb069a8471b8\",\n//                 \"qty\" : 1\n//             }\n//         ]\n//     }\n\n\n\n {\n        \"customerId\" : \"7fb39029-fc04-4665-b2e8-5ad8376bc7c0\",\n        \"transactionDetails\" :\n        [\n            {\n                \"productId\" : \"10ebdc40-f4f9-42be-b9f6-a21478847eae\",\n                \"qty\" : 3\n            },\n            {\n                \"productId\" : \"e102aeb9-c77e-42f9-b3f8-b8f9199ae01a\",\n                \"qty\" : 2\n            },\n            {\n                \"productId\" : \"8e8b3de5-453b-44dd-a4ca-908ac98504ce\",\n                \"qty\" : 3\n            }\n        ]\n    }\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/transactions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"transactions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Transactions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/transactions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"transactions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
