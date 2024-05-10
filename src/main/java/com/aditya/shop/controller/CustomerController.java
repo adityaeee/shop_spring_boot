@@ -47,8 +47,8 @@ public class CustomerController {
     }
 
     @PutMapping
-    public Customer updateCustomer(@RequestBody Customer product) {
-        return customerService.update(product);
+    public Customer updateCustomer(@RequestBody Customer customer) {
+        return customerService.update(customer);
     }
 
     @PutMapping(path = APIUrl.PATH_VAR_ID)

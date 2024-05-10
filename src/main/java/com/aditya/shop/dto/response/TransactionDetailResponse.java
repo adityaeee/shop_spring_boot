@@ -10,3 +10,4 @@ public class TransactionDetailResponse {
     private Long productPrice;
     private Integer quantity;
 }
+ 
