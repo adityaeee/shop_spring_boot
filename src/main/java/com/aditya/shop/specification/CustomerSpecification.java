@@ -40,7 +40,7 @@ public class CustomerSpecification {
                 predicates.add(mobilePhoneNoPredicate);
             }
 
-            if (request.getBirthDate() != null) {
+            if (request.getBirthDate()   != null) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 Date parseDate = new Date();
                 try {

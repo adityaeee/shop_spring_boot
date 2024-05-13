@@ -1,9 +1,14 @@
 package com.aditya.shop.controller;
 
 import com.aditya.shop.constant.APIUrl;
+import com.aditya.shop.dto.request.SearchProductRequest;
 import com.aditya.shop.entity.Product;
 import com.aditya.shop.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,23 +20,35 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    public Product  createNewProduct(@RequestBody Product product) {
-        return productService.create(product);
+    public ResponseEntity<Product>  createNewProduct(@RequestBody Product product) {
+        Product newProduct = productService.create(product);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newProduct);
     }
 
     @GetMapping
-    public List<Product> getAllProduct(
+    public ResponseEntity<Page<Product>> getAllProduct(
             @RequestParam(name = "name", required = false) String name,
-            @RequestParam(name = "minPrice", required = false) Long minPrice,
-            @RequestParam(name = "maxPrice", required = false) Long maxPrice,
-            @RequestParam(name = "stock", required = false) Integer stock
+            @RequestParam(name = "size", defaultValue = "10") Integer size,
+            @RequestParam(name = "page", defaultValue = "1") Integer page,
+            @RequestParam(name = "sortBy", defaultValue = "name") String sortBy,
+            @RequestParam(name = "direction", defaultValue = "asc") String direction
     ) {
-        return productService.getAll(name, minPrice, maxPrice, stock);
+        SearchProductRequest request = SearchProductRequest.builder()
+                .name(name)
+                .direction(direction)
+                .page(page)
+                .size(size)
+                .sortBy(sortBy)
+                .build();
+
+        Page<Product> products = productService.getAll(request);
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping(path = APIUrl.PATH_VAR_ID)
-    public Product getByid(@PathVariable String id) {
-        return productService.getById(id);
+    public ResponseEntity<Product> getByid(@PathVariable String id) {
+        Product product = productService.getById(id);
+        return ResponseEntity.ok(product);
     }
 
     @PutMapping

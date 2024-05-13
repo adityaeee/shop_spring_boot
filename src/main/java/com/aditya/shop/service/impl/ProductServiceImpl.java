@@ -1,9 +1,16 @@
 package com.aditya.shop.service.impl;
 
+import com.aditya.shop.dto.request.SearchProductRequest;
 import com.aditya.shop.entity.Product;
 import com.aditya.shop.repository.ProductRepository;
 import com.aditya.shop.service.ProductService;
+import com.aditya.shop.specification.ProductSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -43,22 +50,25 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getAll(String name, Long minPrice, Long maxPrice, Integer stock) {
-        List<Product> products = new ArrayList<>();
-        List<Product> result = new ArrayList<>();
-
-        if (name != null){
-            return productRepository.findAllByNameLike("%" + name + "%");
-        }else if (minPrice != null) {
-           return productRepository.findAllByPriceGreaterThanEqual(minPrice);
-        }else if (maxPrice != null) {
-            return productRepository.findAllByPriceLessThanEqual(maxPrice);
-        }else if (stock != null) {
-            return productRepository.findAllByStockGreaterThanEqual(stock);
-        }else {
-       return productRepository.findAll();
+    public Page<Product> getAll(SearchProductRequest request) {
+        if(request.getPage() <= 0) {
+            request.setPage(1);
         }
 
+        String validSortBy;
+        if("name".equalsIgnoreCase(request.getSortBy()) || "price".equalsIgnoreCase(request.getSortBy()) || "stock".equalsIgnoreCase(request.getSortBy())) {
+            validSortBy = request.getSortBy();
+        } else {
+            validSortBy = "name";
+        }
+
+        Sort sort = Sort.by(Sort.Direction.fromString(request.getDirection()), /**productRequest.getSortBy()*/ validSortBy);
+
+        Pageable pageable = PageRequest.of((request.getPage() - 1), request.getSize(), sort); // rumus pagination
+
+
+        Specification<Product> specification = ProductSpecification.getSpecification(request);
+        return productRepository.findAll(specification, pageable);
     }
 
 
