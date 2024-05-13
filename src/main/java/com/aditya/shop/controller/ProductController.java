@@ -52,14 +52,15 @@ public class ProductController {
     }
 
     @PutMapping
-    public Product updateProduct(@RequestBody Product product) {
-        return productService.update(product);
+    public ResponseEntity<Product> updateProduct(@RequestBody Product request) {
+        Product product = productService.update(request);
+        return ResponseEntity.ok(product);
     }
 
     @DeleteMapping(path = APIUrl.PATH_VAR_ID)
-    public String deleteById (@PathVariable String id) {
+    public ResponseEntity<String> deleteById (@PathVariable String id) {
         productService.delete(id);
-        return "Ok, success delete product with id "+ id;
+        return ResponseEntity.ok( "Ok, success delete product with id "+ id);
     }
 
 }
