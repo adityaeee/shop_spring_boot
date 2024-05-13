@@ -2,6 +2,7 @@ package com.aditya.shop.service.impl;
 
 import com.aditya.shop.constant.ResponseMessage;
 import com.aditya.shop.dto.request.SearchProductRequest;
+import com.aditya.shop.dto.response.ProductResponse;
 import com.aditya.shop.entity.Product;
 import com.aditya.shop.repository.ProductRepository;
 import com.aditya.shop.service.ProductService;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -54,7 +56,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<Product> getAll(SearchProductRequest request) {
+    public Page<ProductResponse> getAll(SearchProductRequest request) {
         if(request.getPage() <= 0) {
             request.setPage(1);
         }
@@ -72,7 +74,15 @@ public class ProductServiceImpl implements ProductService {
 
 
         Specification<Product> specification = ProductSpecification.getSpecification(request);
-        return productRepository.findAll(specification, pageable);
+
+        Page<Product> products = productRepository.findAll(specification, pageable);
+
+        return products.map(product -> {
+           return ProductResponse.builder()
+                   .name(product.getName())
+                   .price(product.getPrice())
+                   .build();
+        });
     }
 
 

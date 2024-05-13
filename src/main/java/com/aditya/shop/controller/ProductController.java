@@ -5,6 +5,7 @@ import com.aditya.shop.constant.ResponseMessage;
 import com.aditya.shop.dto.request.SearchProductRequest;
 import com.aditya.shop.dto.response.CommonResponse;
 import com.aditya.shop.dto.response.PagingResponse;
+import com.aditya.shop.dto.response.ProductResponse;
 import com.aditya.shop.entity.Product;
 import com.aditya.shop.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<CommonResponse<List<Product>>> getAllProduct(
+    public ResponseEntity<CommonResponse<List<ProductResponse>>> getAllProduct(
             @RequestParam(name = "name", required = false) String name,
             @RequestParam(name = "size", defaultValue = "10") Integer size,
             @RequestParam(name = "page", defaultValue = "1") Integer page,
@@ -50,7 +51,7 @@ public class ProductController {
                 .sortBy(sortBy)
                 .build();
 
-        Page<Product> products = productService.getAll(request);
+        Page<ProductResponse> products = productService.getAll(request);
 
         PagingResponse pagingResponse = PagingResponse.builder()
                 .totalPages(products.getTotalPages())
@@ -61,7 +62,7 @@ public class ProductController {
                 .hasPrevious(products.hasPrevious())
                 .build();
 
-        CommonResponse<List<Product>> response = CommonResponse.<List<Product>>builder()
+        CommonResponse<List<ProductResponse>> response = CommonResponse.<List<ProductResponse>>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message(ResponseMessage.SUCCESS_GET_DATA)
                 .data(products.getContent())
