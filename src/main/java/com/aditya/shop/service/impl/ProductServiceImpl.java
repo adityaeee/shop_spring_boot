@@ -1,5 +1,6 @@
 package com.aditya.shop.service.impl;
 
+import com.aditya.shop.constant.ResponseMessage;
 import com.aditya.shop.dto.request.SearchProductRequest;
 import com.aditya.shop.entity.Product;
 import com.aditya.shop.repository.ProductRepository;
@@ -11,7 +12,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
@@ -43,7 +46,8 @@ public class ProductServiceImpl implements ProductService {
         Optional<Product> productById = productRepository.findById(id);
 
         if (productById.isEmpty()) {
-            throw new RuntimeException("product not found");
+//            throw new RuntimeException("product not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ResponseMessage.ERROR_NOT_FOUND);
         } else {
             return productById.get();
         }
