@@ -1,7 +1,10 @@
 package com.aditya.shop.controller;
 
 import com.aditya.shop.constant.APIUrl;
+import com.aditya.shop.constant.ResponseMessage;
 import com.aditya.shop.dto.request.SearchProductRequest;
+import com.aditya.shop.dto.response.CommonResponse;
+import com.aditya.shop.dto.response.PagingResponse;
 import com.aditya.shop.entity.Product;
 import com.aditya.shop.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +23,19 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    public ResponseEntity<Product>  createNewProduct(@RequestBody Product product) {
+    public ResponseEntity<CommonResponse<Product>>  createNewProduct(@RequestBody Product product) {
         Product newProduct = productService.create(product);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newProduct);
+        CommonResponse<Product> response = CommonResponse.<Product>builder()
+                .statusCode(HttpStatus.CREATED.value())
+                .message(ResponseMessage.SUCCESS_SAVE_DATA)
+                .data(newProduct)
+                .build();
+//        return ResponseEntity.status(HttpStatus.CREATED).body(newProduct);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping
-    public ResponseEntity<Page<Product>> getAllProduct(
+    public ResponseEntity<CommonResponse<List<Product>>> getAllProduct(
             @RequestParam(name = "name", required = false) String name,
             @RequestParam(name = "size", defaultValue = "10") Integer size,
             @RequestParam(name = "page", defaultValue = "1") Integer page,
@@ -42,25 +51,59 @@ public class ProductController {
                 .build();
 
         Page<Product> products = productService.getAll(request);
-        return ResponseEntity.ok(products);
+
+        PagingResponse pagingResponse = PagingResponse.builder()
+                .totalPages(products.getTotalPages())
+                .totalElements(products.getTotalElements())
+                .page(products.getPageable().getPageNumber())
+                .size(products.getPageable().getPageSize())
+                .hasNext(products.hasNext())
+                .hasPrevious(products.hasPrevious())
+                .build();
+
+        CommonResponse<List<Product>> response = CommonResponse.<List<Product>>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message(ResponseMessage.SUCCESS_GET_DATA)
+                .data(products.getContent())
+                .paging(pagingResponse)
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping(path = APIUrl.PATH_VAR_ID)
-    public ResponseEntity<Product> getByid(@PathVariable String id) {
+    public ResponseEntity<CommonResponse<Product>> getByid(@PathVariable String id) {
         Product product = productService.getById(id);
-        return ResponseEntity.ok(product);
+
+        CommonResponse<Product> response = CommonResponse.<Product>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message(ResponseMessage.SUCCESS_GET_DATA)
+                .data(product)
+                .build();
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping
-    public ResponseEntity<Product> updateProduct(@RequestBody Product request) {
+    public ResponseEntity<CommonResponse<Product>> updateProduct(@RequestBody Product request) {
         Product product = productService.update(request);
-        return ResponseEntity.ok(product);
+
+        CommonResponse<Product> response = CommonResponse.<Product>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message(ResponseMessage.SUCCESS_UPDATE_DATA)
+                .data(product)
+                .build();
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping(path = APIUrl.PATH_VAR_ID)
-    public ResponseEntity<String> deleteById (@PathVariable String id) {
+    public ResponseEntity<CommonResponse<String>> deleteById (@PathVariable String id) {
         productService.delete(id);
-        return ResponseEntity.ok( "Ok, success delete product with id "+ id);
+        CommonResponse<String> response = CommonResponse.<String>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message(ResponseMessage.SUCCESS_DELETE_DATA)
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 
 }

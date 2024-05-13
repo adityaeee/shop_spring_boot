@@ -66,9 +66,9 @@ public class ProductServiceImpl implements ProductService {
             validSortBy = "name";
         }
 
-        Sort sort = Sort.by(Sort.Direction.fromString(request.getDirection()), /**productRequest.getSortBy()*/ validSortBy);
+        Sort sort = Sort.by(Sort.Direction.fromString(request.getDirection()), /**request.getSortBy()*/ validSortBy);
 
-        Pageable pageable = PageRequest.of((request.getPage() - 1), request.getSize(), sort); // rumus pagination
+        Pageable pageable = PageRequest.of((request.getPage() - 1), request.getSize(),sort); // rumus pagination
 
 
         Specification<Product> specification = ProductSpecification.getSpecification(request);
