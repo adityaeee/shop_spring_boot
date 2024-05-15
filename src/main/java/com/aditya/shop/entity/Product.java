@@ -10,6 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Entity
+@Builder
 @Table(name = ConstantTable.PRODUCT)
 public class Product {
     @Id

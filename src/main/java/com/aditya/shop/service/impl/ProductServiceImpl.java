@@ -1,12 +1,14 @@
 package com.aditya.shop.service.impl;
 
 import com.aditya.shop.constant.ResponseMessage;
+import com.aditya.shop.dto.request.NewProductRequest;
 import com.aditya.shop.dto.request.SearchProductRequest;
 import com.aditya.shop.dto.response.ProductResponse;
 import com.aditya.shop.entity.Product;
 import com.aditya.shop.repository.ProductRepository;
 import com.aditya.shop.service.ProductService;
 import com.aditya.shop.specification.ProductSpecification;
+import com.aditya.shop.utils.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final ValidationUtil validationUtil;
 
 //    @Autowired
 //    public ProductServiceImpl(ProductRepository productRepository) {
@@ -33,10 +36,16 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public Product create(Product product) {
-//        saveAndflush, jadi ketika product di save akan mengembalikan id yang berhasil di save
-        productRepository.saveAndFlush(product);
-        return product;
+    public Product create(NewProductRequest request) {
+        validationUtil.validate(request);
+
+        Product newProduct = Product.builder()
+                .name(request.getName())
+                .price(request.getPrice())
+                .stock(request.getStock())
+                .build();
+
+        return productRepository.saveAndFlush(newProduct);
     }
 
     @Override
@@ -76,7 +85,7 @@ public class ProductServiceImpl implements ProductService {
         Specification<Product> specification = ProductSpecification.getSpecification(request);
 
         Page<Product> products = productRepository.findAll(specification, pageable);
-
+        
         return products.map(product -> {
            return ProductResponse.builder()
                    .name(product.getName())

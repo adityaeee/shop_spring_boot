@@ -2,6 +2,7 @@ package com.aditya.shop.controller;
 
 import com.aditya.shop.constant.APIUrl;
 import com.aditya.shop.constant.ResponseMessage;
+import com.aditya.shop.dto.request.NewProductRequest;
 import com.aditya.shop.dto.request.SearchProductRequest;
 import com.aditya.shop.dto.response.CommonResponse;
 import com.aditya.shop.dto.response.PagingResponse;
@@ -24,8 +25,8 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    public ResponseEntity<CommonResponse<Product>>  createNewProduct(@RequestBody Product product) {
-        Product newProduct = productService.create(product);
+    public ResponseEntity<CommonResponse<Product>>  createNewProduct(@RequestBody NewProductRequest request) {
+        Product newProduct = productService.create(request);
         CommonResponse<Product> response = CommonResponse.<Product>builder()
                 .statusCode(HttpStatus.CREATED.value())
                 .message(ResponseMessage.SUCCESS_SAVE_DATA)
