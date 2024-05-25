@@ -2,12 +2,10 @@ package com.aditya.shop.entity;
 
 import com.aditya.shop.constant.ConstantTable;
 import com.aditya.shop.constant.ConstantTable;
+import com.aditya.shop.constant.UserRole;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
@@ -15,6 +13,7 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = ConstantTable.CUSTOMER)
 public class Customer {
@@ -36,4 +35,8 @@ public class Customer {
     private Date birthDate;
     @Column(name = "status")
     private Boolean status;
+
+    @OneToOne
+    @JoinColumn(name = "user_account_id")
+    private UserAccount userAccount;
 }

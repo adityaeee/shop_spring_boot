@@ -2,9 +2,12 @@ package com.aditya.shop.service.impl;
 
 import com.aditya.shop.dto.request.SearchCustomerRequest;
 import com.aditya.shop.entity.Customer;
+import com.aditya.shop.entity.UserAccount;
 import com.aditya.shop.repository.CustomerRepository;
 import com.aditya.shop.service.CustomerService;
+import com.aditya.shop.service.UserService;
 import com.aditya.shop.specification.CustomerSpecification;
+import com.aditya.shop.utils.ValidationUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -12,7 +15,11 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +30,16 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
     private final EntityManager entityManager;
+    private final ValidationUtil validationUtil;
+    private final UserService userService;
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Customer create(Customer customer) {
         return customerRepository.saveAndFlush(customer);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Customer getById(String id) {
         return findByIdOrThrowNotFound(id);
@@ -71,7 +82,7 @@ public class CustomerServiceImpl implements CustomerService {
         return entityManager.createQuery(query).getResultList();
     }
 
-
+    @Transactional(readOnly = true)
     @Override
     public List<Customer> getAll(SearchCustomerRequest request){
         Specification<Customer> specification = CustomerSpecification.getSpecification(request);
@@ -83,25 +94,43 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.findAll(specification);
     }
 
-
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Customer update(Customer customer) {
-        findByIdOrThrowNotFound(customer.getId());
-        return customerRepository.saveAndFlush(customer);
+        validationUtil.validate(customer);
+
+        Customer curentCustomer = findByIdOrThrowNotFound(customer.getId());
+
+        UserAccount userAccount = userService.getByContent();
+
+        //hanya bisa diupdate dari diri sendiri untuk level ROLE_CUSTOMER
+        if (!userAccount.getId().equals(curentCustomer.getUserAccount().getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User not found");
+        }
+
+        curentCustomer.setName(customer.getName());
+        curentCustomer.setMobilePhoneNo(customer.getMobilePhoneNo());
+        curentCustomer.setAddress(customer.getAddress());
+        curentCustomer.setBirthDate(customer.getBirthDate());
+        customerRepository.saveAndFlush(curentCustomer);
+
+        return curentCustomer;
     }
 
+
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void delete(String id) {
         Customer customer = findByIdOrThrowNotFound(id);
         customerRepository.delete(customer);
     }
 
-    public Customer findByIdOrThrowNotFound(String id) {
+    private Customer findByIdOrThrowNotFound(String id) {
         // artinya, kita findById, kalau enggak ada dilempar atau di Throw,
         // jadi kan sebenernya di bungkus sama optional dan kita pakai.get maka datanya menjadi Customer kayak kemaren. tapi dengan .orElseThrow kita juga gunakan .get ketika ada datanya dan otomatis di lempat throw ketika data null
         return customerRepository.findById(id).orElseThrow(() -> new RuntimeException("customer not found"));
     }
-
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateStatusById(String id, Boolean status) {
         findByIdOrThrowNotFound(id);

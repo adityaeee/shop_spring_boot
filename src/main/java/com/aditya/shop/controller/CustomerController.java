@@ -7,6 +7,7 @@ import com.aditya.shop.service.CustomerService;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.repository.query.Jpa21Utils;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,15 +19,27 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @PostMapping
-    public Customer createNewCustomer(@RequestBody Customer product) {
-        return customerService.create(product);
-    }
+//	public ResponseEntity<CommonResponse<Customer>> createNewCustomer(@RequestBody Customer product) {
+//		Customer newCustomer = customerService.create(product);
+//		CommonResponse<Customer> response = CommonResponse.<Customer>builder()
+//						.statusCode(HttpStatus.CREATED.value())
+//						.message(ResponseMessage.SUCCESS_SAVE_DATA)
+//						.data(newCustomer)
+//						.build();
+//		return ResponseEntity
+//						.status(HttpStatus.CREATED)
+//						.body(response);
+//	}
+
 
     @GetMapping(path = APIUrl.PATH_VAR_ID)
     public Customer getCustomerById(@PathVariable String id) {
         return customerService.getById(id);
     }
 
+    // hasAnyRole() -> multi role
+    // hasRole() -> single role
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN)")
     @GetMapping
     public List<Customer> getAllCustomer(
             @RequestParam(name = "name", required = false) String name,
