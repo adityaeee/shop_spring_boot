@@ -7,6 +7,7 @@ import com.aditya.shop.service.CustomerService;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.repository.query.Jpa21Utils;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,6 +37,9 @@ public class CustomerController {
         return customerService.getById(id);
     }
 
+    // hasAnyRole() -> multi role
+    // hasRole() -> single role
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN)")
     @GetMapping
     public List<Customer> getAllCustomer(
             @RequestParam(name = "name", required = false) String name,

@@ -2,9 +2,12 @@ package com.aditya.shop.service.impl;
 
 import com.aditya.shop.dto.request.SearchCustomerRequest;
 import com.aditya.shop.entity.Customer;
+import com.aditya.shop.entity.UserAccount;
 import com.aditya.shop.repository.CustomerRepository;
 import com.aditya.shop.service.CustomerService;
+import com.aditya.shop.service.UserService;
 import com.aditya.shop.specification.CustomerSpecification;
+import com.aditya.shop.utils.ValidationUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -12,8 +15,11 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +30,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
     private final EntityManager entityManager;
+    private final ValidationUtil validationUtil;
+    private final UserService userService;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -89,9 +97,27 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Customer update(Customer customer) {
-        findByIdOrThrowNotFound(customer.getId());
-        return customerRepository.saveAndFlush(customer);
+        validationUtil.validate(customer);
+
+        Customer curentCustomer = findByIdOrThrowNotFound(customer.getId());
+
+        UserAccount userAccount = userService.getByContent();
+
+        //hanya bisa diupdate dari diri sendiri untuk level ROLE_CUSTOMER
+        if (!userAccount.getId().equals(curentCustomer.getUserAccount().getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User not found");
+        }
+
+        curentCustomer.setName(customer.getName());
+        curentCustomer.setMobilePhoneNo(customer.getMobilePhoneNo());
+        curentCustomer.setAddress(customer.getAddress());
+        curentCustomer.setBirthDate(customer.getBirthDate());
+        customerRepository.saveAndFlush(curentCustomer);
+
+        return curentCustomer;
     }
+
+
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void delete(String id) {
