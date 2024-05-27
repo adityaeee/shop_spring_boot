@@ -8,11 +8,10 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
-@Entity
 @Builder
-@Table(name = ConstantTable.PRODUCT)
-public class Product {
+@Entity
+@Table(name = ConstantTable.IMAGE)
+public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
@@ -20,13 +19,12 @@ public class Product {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "price", nullable = false)
-    private Long price;
+    @Column(name = "path", nullable = false)
+    private String path;
 
-    @Column(name = "stock", nullable = false)
-    private Integer stock;
+    @Column(name = "size", nullable = false)
+    private Long size;
 
-    @OneToOne
-    @JoinColumn(name = "image_id", unique = true)
-    private Image image;
+    @Column(name = "content_type", nullable = false)
+    private String contentType;
 }

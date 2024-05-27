@@ -4,6 +4,7 @@ import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -39,6 +40,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req -> req
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                         .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/v1/products/image/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/v1/products/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(
