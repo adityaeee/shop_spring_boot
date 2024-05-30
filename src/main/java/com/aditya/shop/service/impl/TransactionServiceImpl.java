@@ -1,20 +1,19 @@
 package com.aditya.shop.service.impl;
 
 import com.aditya.shop.dto.request.TransactionRequest;
+import com.aditya.shop.dto.request.UpdateTransactionPaymentStatusRequest;
+import com.aditya.shop.dto.response.CustomerResponse;
+import com.aditya.shop.dto.response.PaymentResponse;
 import com.aditya.shop.dto.response.TransactionDetailResponse;
 import com.aditya.shop.dto.response.TransactionResponse;
-import com.aditya.shop.entity.Customer;
-import com.aditya.shop.entity.Product;
-import com.aditya.shop.entity.Transaction;
-import com.aditya.shop.entity.TransactionDetail;
+import com.aditya.shop.entity.*;
 import com.aditya.shop.repository.TransactionRepository;
-import com.aditya.shop.service.CustomerService;
-import com.aditya.shop.service.ProductService;
-import com.aditya.shop.service.TransactionDetailService;
-import com.aditya.shop.service.TransactionService;
+import com.aditya.shop.service.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
 import java.util.List;
@@ -24,10 +23,12 @@ import java.util.List;
 public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionRepository transactionRepository;
+
     private final TransactionDetailService transactionDetailService;
     private final CustomerService customerService;
     private final ProductService productService;
 
+    private final PaymentService paymentService;
 
     @Transactional(rollbackOn = Exception.class) // ini akan auto commit, dan akan dirollback jika ada Exception
     @Override
@@ -77,11 +78,32 @@ public class TransactionServiceImpl implements TransactionService {
                             .build();
                 }).toList();
 
+        Payment payment = paymentService.createPayment(trx);
+        trx.setPayment(payment);
+
+        CustomerResponse customerResponse = CustomerResponse.builder()
+                .id(trx.getCustomer().getId())
+                .name(trx.getCustomer().getName())
+                .address(trx.getCustomer().getAddress())
+                .birthDate(trx.getCustomer().getBirthDate())
+                .mobilePhoneNo(trx.getCustomer().getMobilePhoneNo())
+                .status(trx.getCustomer().getStatus())
+                .userAccount(trx.getCustomer().getUserAccount())
+                .build();
+
+        PaymentResponse paymentResponse = PaymentResponse.builder()
+                .id(payment.getId())
+                .token(payment.getToken())
+                .redirectUrl(payment.getRedirectUrl())
+                .transactionStatus(payment.getTransactionStatus())
+                .build();
+
         return TransactionResponse.builder()
                 .id(trx.getId())
-                .customerId(trx.getCustomer().getId())
                 .transDate(trx.getTransDate())
                 .transactionDetails(trxDetailResponse)
+                .customer(customerResponse)
+                .payment(paymentResponse)
                 .build();
     }
 
@@ -105,11 +127,25 @@ public class TransactionServiceImpl implements TransactionService {
 
                   return TransactionResponse.builder()
                           .id(transaction.getId())
-                          .customerId(transaction.getCustomer().getId())
+//                          .customerId(transaction.getCustomer().getId())
                           .transDate(transaction.getTransDate())
                           .transactionDetails(transDetailResponse)
                           .build();
 
                 }).toList();
     }
+
+    @Transactional(rollbackOn = Exception.class)
+    @Override
+    public void updateStatus(UpdateTransactionPaymentStatusRequest updateStatusRequest) {
+        Transaction transaction = transactionRepository.findById(updateStatusRequest.getOrderId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction Not Found"));
+
+        Payment payment = transaction.getPayment();
+        payment.setTransactionStatus(updateStatusRequest.getTransactionStatus());
+
+
+    }
+
+
 }

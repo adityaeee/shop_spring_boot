@@ -106,8 +106,14 @@ public class ProductServiceImpl implements ProductService {
         
         return products.map(product -> {
            return ProductResponse.builder()
+                   .id(product.getId())
                    .name(product.getName())
                    .price(product.getPrice())
+                   .stock(product.getStock())
+                   .imageResponse(ImageResponse.builder()
+                           .name(product.getImage().getName())
+                           .url(product.getImage().getPath())
+                           .build())
                    .build();
         });
     }

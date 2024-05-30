@@ -42,6 +42,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/v1/products/image/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/v1/products/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/transactions/status").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(

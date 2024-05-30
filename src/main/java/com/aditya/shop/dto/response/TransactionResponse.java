@@ -9,7 +9,11 @@ import java.util.List;
 @Builder
 public class TransactionResponse {
     private String id;
-    private String customerId;
+//    private String customerId;
     private Date transDate;
     private List<TransactionDetailResponse> transactionDetails;
+
+    private CustomerResponse customer;
+    private PaymentResponse payment;
+
 }
