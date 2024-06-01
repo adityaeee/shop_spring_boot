@@ -1,0 +1,41 @@
+services:
+  database:
+    image: postgres:alpine
+    container_name: postgres_container
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: aditya_shop
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
+  app:
+    image: adityae/shop:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aditya_shop_container
+    depends_on:
+      - database
+    ports:
+      - "8080:8080"
+    environment:
+      DB_USERNAME: postgres
+      DB_PASSWORD: 1234
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_NAME: aditya_shop
+      JWT_SECRET: aW5pc2VidWFocmFoYXNpYWRpYW50YXJha2l0YQ==
+      JWT_EXPIRATION: 28800000
+      USERNAME_SUPER_ADMIN: superadmin
+      PASSWORD_SUPER_ADMIN: password
+      IMAGE_PATH: /home/enigma/Pictures/aditya_shop_images
+      MIDTRANS_API_KEY: U0ItTWlkLXNlcnZlci1hal9YNkE5bkdjX0o4RDFHVGVwQ2gtemQ=
+      MIDTRANS_SNAP_URL: https://app.sandbox.midtrans.com/snap/v1/transactions
+    volumes:
+      - aditya_shop_images:/home/enigma/Pictures/aditya_shop_images
+
+volumes:
+  postgres_data:
+  aditya_shop_images:
