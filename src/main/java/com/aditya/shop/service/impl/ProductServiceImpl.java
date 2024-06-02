@@ -7,7 +7,6 @@ import com.aditya.shop.dto.request.SearchProductRequest;
 import com.aditya.shop.dto.request.UpdateProduct;
 import com.aditya.shop.dto.response.ImageResponse;
 import com.aditya.shop.dto.response.ProductResponse;
-import com.aditya.shop.entity.Customer;
 import com.aditya.shop.entity.Image;
 import com.aditya.shop.entity.Product;
 import com.aditya.shop.repository.ProductRepository;
