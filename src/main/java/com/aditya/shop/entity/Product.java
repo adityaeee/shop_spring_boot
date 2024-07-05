@@ -10,6 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Entity
+@Builder
 @Table(name = ConstantTable.PRODUCT)
 public class Product {
     @Id
@@ -24,4 +25,8 @@ public class Product {
 
     @Column(name = "stock", nullable = false)
     private Integer stock;
+
+    @OneToOne
+    @JoinColumn(name = "image_id", unique = true)
+    private Image image;
 }
