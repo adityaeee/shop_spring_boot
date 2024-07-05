@@ -37,7 +37,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                 JwtClaims decodeJwt = jwtService.getClaimsByToken(bearerToken);
 
                 // find UserAccount by id form sub in token
-//                UserAccount userAccountBySub = userService.getByUserId(decodeJwt.getUserAccountId());
                 UserAccount userAccountBySub = userService.getByUserId(decodeJwt.getUserAccountId());
                 // verify Authentication use UserPassAuthToken
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(

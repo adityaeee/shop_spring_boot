@@ -18,7 +18,7 @@ import java.util.List;
 public class CustomerController {
     private final CustomerService customerService;
 
-    @PostMapping
+//    @PostMapping
 //	public ResponseEntity<CommonResponse<Customer>> createNewCustomer(@RequestBody Customer product) {
 //		Customer newCustomer = customerService.create(product);
 //		CommonResponse<Customer> response = CommonResponse.<Customer>builder()
@@ -39,7 +39,7 @@ public class CustomerController {
 
     // hasAnyRole() -> multi role
     // hasRole() -> single role
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN)")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
     @GetMapping
     public List<Customer> getAllCustomer(
             @RequestParam(name = "name", required = false) String name,
@@ -53,7 +53,7 @@ public class CustomerController {
                 .phone(phone)
                 .birthDate(birthDate)
                 .status(status)
-                .build(); //ini sama saja seperti new
+                .build();
 
 
         return customerService.getAll(request);

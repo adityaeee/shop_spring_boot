@@ -105,8 +105,6 @@ public class AuthServiceImpl implements AuthService {
     @Transactional(readOnly = true)
     @Override
     public LoginResponse login(AuthRequest request) {
-
-
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 request.getUsername(),
                 request.getPassword()
